@@ -4,6 +4,7 @@ import re
 from .base import BaseAudioDriver
 
 class LinuxAudioDriver(BaseAudioDriver):
+    supports_virtual_hub = True
 
     def get_connected_sinks(self) -> list[dict]:
         try:

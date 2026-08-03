@@ -17,7 +17,8 @@
 * **🎛️ Unified Control:** Manage Active Noise Cancellation (ANC), Transparency mode, and EQ presets directly from your desktop.
 * **🔋 Battery Monitoring:** Real-time battery level tracking for left earbud, right earbud, and charging case.
 * **⚡ Hotkey Integration:** Rapidly toggle audio modes using customizable global keyboard shortcuts.
-* **🌐 Cross-Platform:** Native interface built with PyQt6 supporting **Linux**, **Windows**, and **macOS**.
+* **🌐 Cross-Platform UI:** Native interface built with PyQt6 on **Linux**, **Windows**, and **macOS**.
+* **🧩 Platform-Specific Audio Support:** Linux creates a combined virtual sink natively; macOS and Windows can switch to an existing aggregate or virtual audio device, with volume control and device detection.
 
 ---
 
@@ -31,6 +32,12 @@ Get up and running immediately with pre-built binaries:
    * 🪟 **Windows:** `Open-Multi-Earbud-Hub-Windows.zip`
    * 🍏 **macOS:** `Open-Multi-Earbud-Hub-macOS.zip`
 3. Extract the contents and launch the `Open-Multi-Earbud-Hub` application.
+
+### Platform Notes
+
+* **Linux:** the app creates and removes a combined sink automatically when multiple Bluetooth earbuds are connected.
+* **macOS:** create a Multi-Output or Aggregate Device in Audio MIDI Setup, then launch the app and sync to that virtual output.
+* **Windows:** install a virtual audio device such as VB-Audio Cable or Voicemeeter, then launch the app and sync to that virtual output.
 
 ---
 
