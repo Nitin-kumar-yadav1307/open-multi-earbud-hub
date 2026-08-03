@@ -17,10 +17,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install System C/D-Bus Dependencies
+      - name: Install System C/D-Bus/GLib Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libdbus-1-dev pkg-config zip
+          sudo apt-get install -y libdbus-1-dev libglib2.0-dev pkg-config zip
 
       - name: Install Python Dependencies
         run: |
