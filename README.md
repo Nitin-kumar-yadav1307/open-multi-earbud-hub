@@ -1,6 +1,5 @@
 
 
-Create or replace the `README.md` file in your project root with the following content:
 
 ```markdown
 # Open Multi-Earbud Hub 🎧
@@ -86,7 +85,7 @@ To bundle your local source code into a new AppImage executable:
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-```
+
 
 ---
 
