@@ -25,6 +25,7 @@ jobs:
             libglib2.0-dev \
             gobject-introspection \
             libgirepository1.0-dev \
+            libgirepository-2.0-dev \
             libcairo2-dev \
             pkg-config \
             build-essential \
