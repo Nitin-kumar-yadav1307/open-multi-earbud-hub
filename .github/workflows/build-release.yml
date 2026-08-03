@@ -17,23 +17,22 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install AppImageTool Dependencies
+      - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libfuse2
-          wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
-          chmod +x appimagetool-x86_64.AppImage
-          sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
 
-      - name: Build AppImage via Script
+      - name: Build Standalone Linux Executable
         run: |
-          chmod +x build_appimage.sh
-          ./build_appimage.sh
+          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src:src" --add-data "assets:assets" run.py
+          cd dist
+          zip -r ../Open-Multi-Earbud-Hub-Linux.zip Open-Multi-Earbud-Hub
 
-      - name: Upload Linux AppImage
+      - name: Upload Linux Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: Open-Multi-Earbud-Hub-x86_64.AppImage
+          files: Open-Multi-Earbud-Hub-Linux.zip
 
   build-windows:
     runs-on: windows-latest
