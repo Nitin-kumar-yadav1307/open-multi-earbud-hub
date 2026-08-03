@@ -56,7 +56,7 @@ jobs:
       - name: Build Windows Executable
         run: |
           pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src;src" --add-data "assets;assets" run.py
-          Compress-Archive -Path dist/Open-Multi-Earbud-Hub/* -DestinationPath Open-Multi-Earbud-Hub-Windows.zip
+          Compress-Archive -Path dist/Open-Multi-Earbud-Hub -DestinationPath Open-Multi-Earbud-Hub-Windows.zip
 
       - name: Upload Windows Asset
         uses: softprops/action-gh-release@v2
