@@ -12,4 +12,14 @@ ENV/
 .vscode/
 .idea/
 .DS_Store
-*.swp
+*.swp# AppImage & PyInstaller builds
+*.AppImage
+*.spec
+build/
+dist/
+AppDir/
+
+# Python cache files
+__pycache__/
+*.pyc
+.venv/
