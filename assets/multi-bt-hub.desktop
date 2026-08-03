@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Multi-Earbud Hub
+Comment=Manage dual Bluetooth earpod audio output
+Exec=python3 -m src.main --gui
+Icon=audio-headphones
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;

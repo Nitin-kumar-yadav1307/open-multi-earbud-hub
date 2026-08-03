@@ -1,0 +1,12 @@
+[Unit]
+Description=Multi-Earbud Bluetooth Auto-Sync Daemon
+After=pipewire.service bluetooth.target
+
+[Service]
+ExecStart=/usr/bin/python3 -m src.daemon
+WorkingDirectory=%h/multi-earbud-hub
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
