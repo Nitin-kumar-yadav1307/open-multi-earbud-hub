@@ -23,8 +23,9 @@ jobs:
           sudo apt-get install -y \
             libdbus-1-dev \
             libglib2.0-dev \
-            libcairo2-dev \
+            gobject-introspection \
             libgirepository1.0-dev \
+            libcairo2-dev \
             pkg-config \
             build-essential \
             zip
@@ -63,7 +64,7 @@ jobs:
       - name: Build Windows Executable
         run: |
           pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src;src" --add-data "assets;assets" run.py
-          Compress-Archive -Path dist/Open-Multi-Earbud-Hub -DestinationPath Open-Multi-Earbud-Hub-Windows.zip
+          Compress-Archive -Path dist/Open-Multi-Earbud-Hub/* -DestinationPath Open-Multi-Earbud-Hub-Windows.zip
 
       - name: Upload Windows Asset
         uses: softprops/action-gh-release@v2
