@@ -1,85 +1,93 @@
+<div align="center">
 
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:007acc,100:00d4ff&height=220&section=header&text=Open%20Multi-Earbud%20Hub&fontSize=40&fontColor=ffffff&animation=fadeIn&subtext=Unified%20Desktop%20Control%20for%20Wireless%20Earbuds&subFontSize=16" width="100%" alt="Header Banner" />
 
+[![GitHub Release](https://img.shields.io/github/v/release/Nitin-Kumar-yadav1307/open-multi-earbud-hub?color=007acc&style=for-the-badge)](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/releases/latest)
+[![Platform Support](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-informational?style=for-the-badge)](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/releases)
+[![License](https://img.shields.io/github/license/Nitin-Kumar-yadav1307/open-multi-earbud-hub?style=for-the-badge)](LICENSE)
 
-```markdown
-# Open Multi-Earbud Hub 🎧
+[Download Executables](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/releases/latest) · [Report Bug](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/issues) · [Request Feature](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/issues)
 
-![Version](https://img.shields.io/github/v/release/Nitin-kumar-yadav1307/open-multi-earbud-hub?color=blue&style=flat-square)
-![License](https://img.shields.io/github/license/Nitin-kumar-yadav1307/open-multi-earbud-hub?color=green&style=flat-square)
-![Platform](https://img.shields.io/badge/platform-Linux-orange?style=flat-square)
-
-An open-source Linux desktop utility designed for managing multiple Bluetooth audio devices simultaneously. Built with Python and PyQt6.
+</div>
 
 ---
 
 ## ✨ Features
 
-* **Multi-Device Management:** Seamlessly discover, pair, and route audio across multiple Bluetooth earbuds or headphones.
-* **Modern PyQt6 Interface:** Clean, responsive desktop GUI.
-* **Standalone AppImage:** Zero dependencies required—runs on Fedora, Ubuntu, Arch, Debian, and Linux Mint.
-* **Background Daemon:** Optional `systemd` user service for automated background monitoring.
+* **🎛️ Unified Control:** Manage Active Noise Cancellation (ANC), Transparency mode, and EQ presets directly from your desktop.
+* **🔋 Battery Monitoring:** Real-time battery level tracking for left earbud, right earbud, and charging case.
+* **⚡ Hotkey Integration:** Rapidly toggle audio modes using customizable global keyboard shortcuts.
+* **🌐 Cross-Platform:** Native interface built with PyQt6 supporting **Linux**, **Windows**, and **macOS**.
 
 ---
 
-## 🚀 Quick Start (AppImage)
+## ⚡ Quickstart
 
-The easiest way to run **Open Multi-Earbud Hub** is by downloading the standalone AppImage.
+Get up and running immediately with pre-built binaries:
 
-1. Download the latest `Open-Multi-Earbud-Hub-x86_64.AppImage` from the [Releases Page](https://github.com/Nitin-kumar-yadav1307/open-multi-earbud-hub/releases/latest).
-2. Open your terminal in your download folder and make the file executable:
-   ```bash
-   chmod +x Open-Multi-Earbud-Hub-x86_64.AppImage
-
-```
-
-3. Launch the application:
-```bash
-./Open-Multi-Earbud-Hub-x86_64.AppImage
-
-```
-
-
-
-*(Alternatively, right-click the downloaded AppImage in your file manager, navigate to **Properties** -> **Permissions**, check **"Allow executing file as program"**, and double-click to run).*
+1. Head to the **[Latest Releases](https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub/releases/latest)** page.
+2. Download the package for your operating system:
+   * 🐧 **Linux:** `Open-Multi-Earbud-Hub-Linux.zip`
+   * 🪟 **Windows:** `Open-Multi-Earbud-Hub-Windows.zip`
+   * 🍏 **macOS:** `Open-Multi-Earbud-Hub-macOS.zip`
+3. Extract the contents and launch the `Open-Multi-Earbud-Hub` application.
 
 ---
 
-## 🛠️ Building from Source
+## 🛠️ Developer Setup & Local Building
 
-If you want to run or modify the application locally:
+To set up the project locally for development or run from source:
 
-### 1. Clone the Repository
+### 1. Prerequisites
+
+* Python `3.11` or higher installed.
+
+<details>
+<summary><b>🐧 System Dependencies for Linux (Click to expand)</b></summary>
+
+Linux requires native D-Bus, GObject, and GLib development libraries before installing Python packages:
 
 ```bash
-git clone [https://github.com/Nitin-kumar-yadav1307/open-multi-earbud-hub.git](https://github.com/Nitin-kumar-yadav1307/open-multi-earbud-hub.git)
+# Ubuntu / Debian
+sudo apt update
+sudo apt install -y libdbus-1-dev libglib2.0-dev gobject-introspection libgirepository1.0-dev libcairo2-dev pkg-config build-essential
+
+# Fedora
+sudo dnf install dbus-devel glib2-devel gobject-introspection-devel cairo-gobject-devel pkgconfig gcc
+```
+
+</details>
+
+### 2. Environment Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/Nitin-Kumar-yadav1307/open-multi-earbud-hub.git
 cd open-multi-earbud-hub
 
-```
+# Create a virtual environment
+python -m venv venv
 
-### 2. Install Dependencies
+# Activate virtual environment
+# On Linux / macOS:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
 
-```bash
+# Upgrade pip and install dependencies
+python -m pip install --upgrade pip
 pip install -r requirements.txt
-
 ```
 
-### 3. Run the Application
+### 3. Run Application
 
 ```bash
-python3 run.py
-
-```
-
-### 4. Build Your Own AppImage
-
-To bundle your local source code into a new AppImage executable:
-
-```bash
-./build_appimage.sh
-
+python run.py
 ```
 
 ---
+
+
 
 ## 📄 License
 
