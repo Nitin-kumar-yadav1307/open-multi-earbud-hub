@@ -149,8 +149,8 @@ std::vector<DeviceRecord> enumerateDevices() {
             continue;
         }
 
-        auto id = getDeviceId(device);
-        auto friendlyName = getFriendlyName(device);
+        auto id = getDeviceId(device.Get());
+        auto friendlyName = getFriendlyName(device.Get());
         if (!id.empty() && !friendlyName.empty()) {
             devices.push_back({std::move(id), std::move(friendlyName)});
         }
@@ -249,8 +249,8 @@ void WindowsBackend::setVolume(const std::string& sinkName, int volumePercent) {
             continue;
         }
 
-        auto id = getDeviceId(device);
-        auto friendlyName = getFriendlyName(device);
+        auto id = getDeviceId(device.Get());
+        auto friendlyName = getFriendlyName(device.Get());
         if ((id == targetName) || (friendlyName == targetName)) {
             ComPtr<IAudioEndpointVolume> endpointVolume;
             if (SUCCEEDED(device->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_ALL, nullptr, reinterpret_cast<void**>(endpointVolume.GetAddressOf()))) && endpointVolume) {
@@ -289,13 +289,13 @@ void WindowsBackend::updateHub() {
             continue;
         }
 
-        auto friendlyName = getFriendlyName(device);
-        auto id = getDeviceId(device);
+        auto friendlyName = getFriendlyName(device.Get());
+        auto id = getDeviceId(device.Get());
         if (!friendlyName.empty() && isVirtualHubDevice(wideToUtf8(friendlyName))) {
             if (previousDefaultDeviceId_.empty()) {
                 ComPtr<IMMDevice> defaultDevice;
                 if (SUCCEEDED(enumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, defaultDevice.GetAddressOf())) && defaultDevice) {
-                    previousDefaultDeviceId_ = wideToUtf8(getDeviceId(defaultDevice));
+                    previousDefaultDeviceId_ = wideToUtf8(getDeviceId(defaultDevice.Get()));
                 }
             }
             virtualDeviceId = std::move(id);
