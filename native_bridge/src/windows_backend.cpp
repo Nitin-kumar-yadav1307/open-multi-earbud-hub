@@ -9,12 +9,12 @@
 
 #if defined(_WIN32)
 #include <windows.h>
-#include <initguid.h>
 #include <comdef.h>
 #include <mmdeviceapi.h>
 #include <propsys.h>
 #include <endpointvolume.h>
 #include <wrl/client.h>
+
 
 namespace bridge {
 
@@ -30,6 +30,18 @@ const PROPERTYKEY kPKEY_Device_FriendlyName = {
     14};
 
 constexpr CLSID CLSID_PolicyConfigClient = {0x870af99c, 0x171d, 0x4f9e, {0xaf, 0x0d, 0xe6, 0x3d, 0xf4, 0x0c, 0x2b, 0xc9}};
+
+// CLSID of the MMDeviceEnumerator coclass (used by CoCreateInstance to obtain
+// an IMMDeviceEnumerator). Declared as a constexpr so the value is inlined at
+// each use site and no external GUID symbol is required at link time. The
+// canonical value ships in <mmdeviceapi.h> as an `extern const CLSID`, but under
+// modern MSVC /permissive- that symbol is not reliably defined for every SDK
+// layout, which produces LNK2019. Inlining it here (the same approach already
+// used for CLSID_PolicyConfigClient above) removes the linker dependency on a
+// fragile GUID definition. (We deliberately do NOT include <initguid.h>: that
+// would emit an extern "C" definition of this same CLSID from the SDK header
+// and clash with this constexpr on redefinition.)
+constexpr CLSID CLSID_MMDeviceEnumerator = {0xbce0395e, 0xe52f, 0x467c, {0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e}};
 
 MIDL_INTERFACE("F8679F50-850A-41CF-9C72-430F290290C8")
 IPolicyConfig : public IUnknown {
