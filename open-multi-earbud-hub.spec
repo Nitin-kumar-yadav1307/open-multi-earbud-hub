@@ -5,7 +5,7 @@ a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
-    datas=[('src', 'src'), ('assets', 'assets'), ('systemd', 'systemd')],
+    datas=[('src', 'src'), ('assets', 'assets'), ('systemd', 'systemd'), ('native', 'native')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

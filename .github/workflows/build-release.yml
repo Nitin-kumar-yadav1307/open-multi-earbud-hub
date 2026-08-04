@@ -29,6 +29,7 @@ jobs:
             libcairo2-dev \
             pkg-config \
             build-essential \
+            cmake \
             zip
 
       - name: Install Python Dependencies
@@ -37,9 +38,15 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Build Native Bridge
+        run: |
+          cmake -S native_bridge -B native_bridge/build
+          cmake --build native_bridge/build
+          test -f native/multi_earbud_bridge && echo "Native bridge built OK"
+
       - name: Build Linux Executable
         run: |
-          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src:src" --add-data "assets:assets" run.py
+          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src:src" --add-data "assets:assets" --add-data "native:native" run.py
           cd dist
           zip -r ../Open-Multi-Earbud-Hub-Linux.zip Open-Multi-Earbud-Hub
 
@@ -60,11 +67,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
+          pip install pyinstaller cmake
+
+      - name: Set up MSVC command line environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build Native Bridge
+        shell: bash
+        run: |
+          cmake -S native_bridge -B native_bridge/build -A x64
+          cmake --build native_bridge/build --config Release
+          test -f native/multi_earbud_bridge.exe && echo "Native bridge built OK"
 
       - name: Build Windows Executable
         run: |
-          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src;src" --add-data "assets;assets" run.py
+          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src;src" --add-data "assets;assets" --add-data "native;native" run.py
           Compress-Archive -Path dist/Open-Multi-Earbud-Hub/* -DestinationPath Open-Multi-Earbud-Hub-Windows.zip
 
       - name: Upload Windows Asset
@@ -84,11 +101,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pyinstaller
+          pip install pyinstaller cmake
+
+      - name: Build Native Bridge
+        run: |
+          cmake -S native_bridge -B native_bridge/build
+          cmake --build native_bridge/build
+          test -f native/multi_earbud_bridge && echo "Native bridge built OK"
 
       - name: Build macOS App
         run: |
-          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src:src" --add-data "assets:assets" run.py
+          pyinstaller --noconfirm --onedir --windowed --name "Open-Multi-Earbud-Hub" --add-data "src:src" --add-data "assets:assets" --add-data "native:native" run.py
           cd dist
           zip -r ../Open-Multi-Earbud-Hub-macOS.zip Open-Multi-Earbud-Hub.app
 

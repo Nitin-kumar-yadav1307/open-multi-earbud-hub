@@ -92,6 +92,16 @@ pip install -r requirements.txt
 python run.py
 ```
 
+### Native Bridge Build
+
+The app will use the compiled C++ bridge from `native/` when it is available.
+To build it manually during development:
+
+```bash
+cmake -S native_bridge -B native_bridge/build
+cmake --build native_bridge/build -j2
+```
+
 ---
 
 
