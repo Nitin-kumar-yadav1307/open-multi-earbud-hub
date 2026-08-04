@@ -8,12 +8,13 @@
 #include <vector>
 
 #if defined(_WIN32)
+#include <windows.h>
+#include <initguid.h>
 #include <comdef.h>
 #include <mmdeviceapi.h>
 #include <propsys.h>
 #include <endpointvolume.h>
 #include <wrl/client.h>
-#include <windows.h>
 
 namespace bridge {
 

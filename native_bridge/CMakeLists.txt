@@ -7,12 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../native)
-# Ensure the binary lands directly in native/ for single-config (Make/Ninja) and
-# multi-config (Visual Studio) generators alike, so the Python wrapper and CI
-# can rely on a stable path regardless of -DCMAKE_BUILD_TYPE / --config.
-foreach(_cfg "" DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY${_cfg} ${CMAKE_SOURCE_DIR}/../native)
-endforeach()
 
 add_executable(multi_earbud_bridge
     src/main.cpp
@@ -23,6 +17,20 @@ add_executable(multi_earbud_bridge
     src/linux_backend.cpp
     src/macos_backend.cpp
     src/windows_backend.cpp
+)
+
+# Place the binary directly in native/ for single-config (Make/Ninja) and
+# multi-config (Visual Studio) generators alike, so the Python wrapper and CI
+# can rely on a stable path regardless of -DCMAKE_BUILD_TYPE / --config. Setting
+# the per-config target property prevents the Visual Studio generator from
+# appending a Release/Debug subdirectory.
+set(_native_output_dir ${CMAKE_SOURCE_DIR}/../native)
+set_target_properties(multi_earbud_bridge PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${_native_output_dir}
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${_native_output_dir}
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${_native_output_dir}
+    RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${_native_output_dir}
+    RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${_native_output_dir}
 )
 
 target_include_directories(multi_earbud_bridge PRIVATE include)
