@@ -9,8 +9,6 @@
 
 #if defined(_WIN32)
 #include <comdef.h>
-#include <initguid.h>
-#include <functiondiscoverykeys_devpkey.h>
 #include <mmdeviceapi.h>
 #include <propsys.h>
 #include <endpointvolume.h>
@@ -22,6 +20,13 @@ namespace bridge {
 namespace {
 
 using Microsoft::WRL::ComPtr;
+
+// Device property key we need. Normally exposed by <functiondiscoverykeys_devpkey.h>,
+// which is brittle under modern MSVC (/permissive-); we declare the one key used here
+// directly as a file-local constant so no fragile GUID header is required.
+const PROPERTYKEY kPKEY_Device_FriendlyName = {
+    {0xA45C254E, 0xDF1C, 0x4EFD, {0x80, 0x20, 0x67, 0xD1, 0x46, 0xA8, 0x50, 0xE0}},
+    14};
 
 constexpr CLSID CLSID_PolicyConfigClient = {0x870af99c, 0x171d, 0x4f9e, {0xaf, 0x0d, 0xe6, 0x3d, 0xf4, 0x0c, 0x2b, 0xc9}};
 
@@ -103,7 +108,7 @@ std::wstring getFriendlyName(IMMDevice* device) {
     PROPVARIANT value;
     PropVariantInit(&value);
     std::wstring friendlyName;
-    if (SUCCEEDED(store->GetValue(PKEY_Device_FriendlyName, &value)) && value.vt == VT_LPWSTR && value.pwszVal) {
+    if (SUCCEEDED(store->GetValue(kPKEY_Device_FriendlyName, &value)) && value.vt == VT_LPWSTR && value.pwszVal) {
         friendlyName = value.pwszVal;
     }
     PropVariantClear(&value);
