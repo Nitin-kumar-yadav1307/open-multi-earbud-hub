@@ -9,6 +9,7 @@
 
 #if defined(_WIN32)
 #include <comdef.h>
+#include <initguid.h>
 #include <functiondiscoverykeys_devpkey.h>
 #include <mmdeviceapi.h>
 #include <propsys.h>
