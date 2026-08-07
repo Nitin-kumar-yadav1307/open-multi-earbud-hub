@@ -1,3 +1,11 @@
+"""Pure-Python Windows audio driver via ``pycaw``.
+
+.. deprecated::
+    This driver is deprecated. Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver`
+    instead. The native C++ bridge provides better performance and reliability.
+    This fallback will be removed in a future release once the bridge reaches feature parity.
+"""
+
 import warnings
 
 from pycaw.constants import DEVICE_STATE, EDataFlow
@@ -5,6 +13,12 @@ from pycaw.pycaw import AudioUtilities
 from .base import BaseAudioDriver
 
 class WindowsAudioDriver(BaseAudioDriver):
+    """Pure-Python Windows audio driver via ``pycaw``.
+
+    .. deprecated::
+        Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver` instead.
+    """
+    _deprecated = True
     supports_default_device_switch = True
     supports_external_virtual_device = True
 

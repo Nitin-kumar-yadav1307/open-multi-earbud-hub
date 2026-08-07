@@ -5,6 +5,7 @@ class BaseAudioDriver(ABC):
     supports_virtual_hub = False
     supports_default_device_switch = False
     supports_external_virtual_device = False
+    _deprecated = False  # Subclasses may set True to indicate pending removal
 
     @abstractmethod
     def get_connected_sinks(self) -> list[dict]:

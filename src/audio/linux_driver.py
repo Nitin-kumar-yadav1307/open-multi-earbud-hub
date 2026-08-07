@@ -1,9 +1,23 @@
+"""Pure-Python Linux audio driver via ``pactl``.
+
+.. deprecated::
+    This driver is deprecated. Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver`
+    instead. The native C++ bridge provides better performance and reliability.
+    This fallback will be removed in a future release once the bridge reaches feature parity.
+"""
+
 import subprocess
 import time
 import re
 from .base import BaseAudioDriver
 
 class LinuxAudioDriver(BaseAudioDriver):
+    """Pure-Python Linux audio driver via ``pactl``.
+
+    .. deprecated::
+        Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver` instead.
+    """
+    _deprecated = True
     supports_virtual_hub = True
 
     def get_connected_sinks(self) -> list[dict]:

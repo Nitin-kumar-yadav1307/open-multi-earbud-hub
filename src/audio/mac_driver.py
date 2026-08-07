@@ -1,8 +1,22 @@
+"""Pure-Python macOS audio driver via ``SwitchAudioSource``.
+
+.. deprecated::
+    This driver is deprecated. Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver`
+    instead. The native C++ bridge provides better performance and reliability.
+    This fallback will be removed in a future release once the bridge reaches feature parity.
+"""
+
 import subprocess
 import shutil
 from .base import BaseAudioDriver
 
 class MacAudioDriver(BaseAudioDriver):
+    """Pure-Python macOS audio driver via ``SwitchAudioSource``.
+
+    .. deprecated::
+        Use :class:`~src.audio.native_bridge.NativeBridgeAudioDriver` instead.
+    """
+    _deprecated = True
     supports_default_device_switch = True
     supports_external_virtual_device = True
 
