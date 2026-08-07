@@ -6,10 +6,14 @@
     This fallback will be removed in a future release once the bridge reaches feature parity.
 """
 
+import logging
 import subprocess
 import time
 import re
 from .base import BaseAudioDriver
+
+logger = logging.getLogger(__name__)
+
 
 class LinuxAudioDriver(BaseAudioDriver):
     """Pure-Python Linux audio driver via ``pactl``.
@@ -35,7 +39,7 @@ class LinuxAudioDriver(BaseAudioDriver):
                     })
             return sinks
         except Exception as e:
-            print(f"[LinuxDriver] Error fetching sinks: {e}")
+            logger.error("Error fetching sinks: %s", e)
             return []
 
     def set_volume(self, sink_name: str, volume_percent: int) -> None:
@@ -48,9 +52,9 @@ class LinuxAudioDriver(BaseAudioDriver):
                 if "module-combine-sink" in line and self.HUB_NAME in line:
                     module_id = line.split()[0]
                     subprocess.run(["pactl", "unload-module", module_id])
-                    print(f"[LinuxDriver] Unloaded old hub module (ID: {module_id})")
+                    logger.info("Unloaded old hub module (ID: %s)", module_id)
         except Exception as e:
-            print(f"[LinuxDriver] Error unloading hub: {e}")
+            logger.error("Error unloading hub: %s", e)
 
     def update_hub(self) -> None:
         time.sleep(5)  # Allow PipeWire sink registration to settle
@@ -68,8 +72,8 @@ class LinuxAudioDriver(BaseAudioDriver):
             try:
                 module_id = subprocess.check_output(cmd).decode("utf-8").strip()
                 subprocess.run(["pactl", "set-default-sink", self.HUB_NAME])
-                print(f"[LinuxDriver] Created Multi-Earbud Hub for {len(sinks)} devices (Module: {module_id})")
+                logger.info("Created Multi-Earbud Hub for %d devices (Module: %s)", len(sinks), module_id)
             except Exception as e:
-                print(f"[LinuxDriver] Sync failed: {e}")
+                logger.error("Sync failed: %s", e)
         else:
-            print(f"[LinuxDriver] Only {len(sinks)} Bluetooth sink(s) active. Standby.")
+            logger.info("Only %d Bluetooth sink(s) active. Standby.", len(sinks))

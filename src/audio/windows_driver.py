@@ -6,11 +6,15 @@
     This fallback will be removed in a future release once the bridge reaches feature parity.
 """
 
+import logging
 import warnings
 
 from pycaw.constants import DEVICE_STATE, EDataFlow
 from pycaw.pycaw import AudioUtilities
 from .base import BaseAudioDriver
+
+logger = logging.getLogger(__name__)
+
 
 class WindowsAudioDriver(BaseAudioDriver):
     """Pure-Python Windows audio driver via ``pycaw``.
@@ -34,7 +38,7 @@ class WindowsAudioDriver(BaseAudioDriver):
                     device_state=DEVICE_STATE.ACTIVE.value,
                 )
             except Exception as exc:
-                print(f"[WindowsDriver] Error fetching devices: {exc}")
+                logger.error("Error fetching devices: %s", exc)
                 return []
 
     def _is_earbud_device(self, device_name: str) -> bool:
@@ -84,18 +88,18 @@ class WindowsAudioDriver(BaseAudioDriver):
             target_device = next(iter(devices), None)
 
         if target_device is None:
-            print(f"[WindowsDriver] No matching device found for volume update: {sink_name}")
+            logger.warning("No matching device found for volume update: %s", sink_name)
             return
 
         try:
             target_device.volume_percent = volume_percent
         except Exception as exc:
-            print(f"[WindowsDriver] Failed to set volume for {sink_name}: {exc}")
+            logger.error("Failed to set volume for %s: %s", sink_name, exc)
 
     def update_hub(self) -> None:
         devices = self._connected_output_devices()
         if not devices:
-            print("[WindowsDriver] No output devices available.")
+            logger.warning("No output devices available.")
             return
 
         if self._previous_default_device_id is None:
@@ -113,17 +117,16 @@ class WindowsAudioDriver(BaseAudioDriver):
                 break
 
         if target is None:
-            print(
-                "[WindowsDriver] No virtual audio device found. "
-                "Install a virtual audio cable or Voicemeeter and retry."
+            logger.warning(
+                "No virtual audio device found. Install a virtual audio cable or Voicemeeter and retry."
             )
             return
 
         try:
             AudioUtilities.SetDefaultDevice(target["id"])
-            print(f"[WindowsDriver] Default output switched to virtual device {target['desc']}")
+            logger.info("Default output switched to virtual device %s", target["desc"])
         except Exception as exc:
-            print(f"[WindowsDriver] Failed to switch default output: {exc}")
+            logger.error("Failed to switch default output: %s", exc)
 
     def unload_hub(self) -> None:
         if not self._previous_default_device_id:
@@ -131,9 +134,9 @@ class WindowsAudioDriver(BaseAudioDriver):
 
         try:
             AudioUtilities.SetDefaultDevice(self._previous_default_device_id)
-            print("[WindowsDriver] Restored previous default output device")
+            logger.info("Restored previous default output device")
         except Exception as exc:
-            print(f"[WindowsDriver] Failed to restore default output: {exc}")
+            logger.error("Failed to restore default output: %s", exc)
 
     def has_usable_hub_device(self) -> bool:
         for device in self._connected_output_devices():

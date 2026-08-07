@@ -6,12 +6,12 @@
 #include "bridge/command.hpp"
 #include "bridge/command_router.hpp"
 #include "bridge/json.hpp"
+#include "bridge/log.hpp"
 
 namespace {
 
-void printUsage() {
-    std::cerr << "Usage: multi_earbud_bridge <list_sinks|set_volume|update_hub|unload_hub|has_usable_hub_device|help> [args...]\n";
-}
+const char* kUsage =
+    "Usage: multi_earbud_bridge <list_sinks|set_volume|update_hub|unload_hub|has_usable_hub_device|help> [args...]\n";
 
 }  // namespace
 
@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
         std::cout << result.json << std::endl;
         return result.exitCode;
     } catch (const std::invalid_argument& ex) {
-        printUsage();
+        std::cerr << kUsage;
+        bridge::log_error(std::string("Error: ") + ex.what());
         bridge::BridgeReply reply;
         reply.ok = false;
         reply.error_code = bridge::ErrorCode::InvalidArguments;

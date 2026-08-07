@@ -6,9 +6,13 @@
     This fallback will be removed in a future release once the bridge reaches feature parity.
 """
 
+import logging
 import subprocess
 import shutil
 from .base import BaseAudioDriver
+
+logger = logging.getLogger(__name__)
+
 
 class MacAudioDriver(BaseAudioDriver):
     """Pure-Python macOS audio driver via ``SwitchAudioSource``.
@@ -66,7 +70,7 @@ class MacAudioDriver(BaseAudioDriver):
 
     def update_hub(self) -> None:
         if not self._has_switch_audio_source():
-            print("[MacDriver] SwitchAudioSource is not installed.")
+            logger.warning("SwitchAudioSource is not installed.")
             return
 
         output_devices = self._switch_audio_source("-a", "-t", "output").stdout.splitlines()
@@ -78,18 +82,17 @@ class MacAudioDriver(BaseAudioDriver):
                 break
 
         if virtual_device is None:
-            print(
-                "[MacDriver] No aggregate or multi-output device found. "
-                "Create one in Audio MIDI Setup and retry."
+            logger.warning(
+                "No aggregate or multi-output device found. Create one in Audio MIDI Setup and retry."
             )
             return
 
         self._previous_default_sink = self._current_output_device()
         result = self._switch_audio_source("-s", virtual_device, "-t", "output")
         if result.returncode == 0:
-            print(f"[MacDriver] Default output switched to virtual device {virtual_device}")
+            logger.info("Default output switched to virtual device %s", virtual_device)
         else:
-            print(f"[MacDriver] Failed to switch output: {result.stderr.strip()}")
+            logger.error("Failed to switch output: %s", result.stderr.strip())
 
     def _current_output_device(self) -> str | None:
         if not self._has_switch_audio_source():

@@ -1,9 +1,14 @@
+import logging
 import sys
+
 from .audio import get_audio_driver
+
+logger = logging.getLogger(__name__)
+
 
 def run_daemon():
     driver = get_audio_driver()
-    print("[Daemon] Starting Multi-Earbud Background Listener...")
+    logger.info("Starting Multi-Earbud Background Listener...")
 
     if sys.platform.startswith("linux"):
         import dbus
@@ -12,7 +17,7 @@ def run_daemon():
 
         def interfaces_added_handler(path, interfaces):
             if "org.bluez.Device1" in interfaces:
-                print("[Daemon] Bluetooth event detected! Triggering audio sync...")
+                logger.info("Bluetooth event detected! Triggering audio sync...")
                 driver.update_hub()
 
         DBusGMainLoop(set_as_default=True)
@@ -28,10 +33,10 @@ def run_daemon():
         try:
             loop.run()
         except KeyboardInterrupt:
-            print("\n[Daemon] Stopping daemon...")
+            logger.info("Stopping daemon...")
             driver.unload_hub()
     else:
-        print("[Daemon] Background service is currently implemented for Linux D-Bus.")
+        logger.info("Background service is currently implemented for Linux D-Bus.")
 
 if __name__ == "__main__":
     run_daemon()
