@@ -1,4 +1,15 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class DriverCapabilities:
+    """Describes which operations the current audio driver supports."""
+
+    can_create_virtual_hub: bool = False
+    can_use_external_virtual_device: bool = False
+    can_switch_default_device: bool = False
+
 
 class BaseAudioDriver(ABC):
     HUB_NAME = "MultiEarbudSink"
@@ -6,6 +17,18 @@ class BaseAudioDriver(ABC):
     supports_default_device_switch = False
     supports_external_virtual_device = False
     _deprecated = False  # Subclasses may set True to indicate pending removal
+
+    def get_capabilities(self) -> DriverCapabilities:
+        """Return a structured description of this driver's capabilities.
+
+        Subclasses may override this to provide dynamic capability detection.
+        The default implementation reads the legacy class-level flags.
+        """
+        return DriverCapabilities(
+            can_create_virtual_hub=self.supports_virtual_hub,
+            can_use_external_virtual_device=self.supports_external_virtual_device,
+            can_switch_default_device=self.supports_default_device_switch,
+        )
 
     @abstractmethod
     def get_connected_sinks(self) -> list[dict]:

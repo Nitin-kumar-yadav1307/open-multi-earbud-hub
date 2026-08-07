@@ -52,14 +52,16 @@ class SetupWizardDialog(QDialog):
         layout.addLayout(button_row)
 
     def _summary_text(self):
-        if getattr(self.driver, "supports_virtual_hub", False):
+        capabilities = self.driver.get_capabilities()
+        if capabilities.can_create_virtual_hub:
             return "Linux can create and remove the combined sink automatically when multiple Bluetooth earbuds are available."
-        if getattr(self.driver, "supports_external_virtual_device", False):
+        if capabilities.can_use_external_virtual_device:
             return "This platform needs an existing aggregate or virtual audio device before the app can sync audio to it."
         return "This platform can detect devices, but it does not support hub creation in the current backend."
 
     def _steps_html(self):
-        if getattr(self.driver, "supports_virtual_hub", False):
+        capabilities = self.driver.get_capabilities()
+        if capabilities.can_create_virtual_hub:
             return """
             <h3>Linux setup</h3>
             <ol>
@@ -70,7 +72,7 @@ class SetupWizardDialog(QDialog):
             <p>The app will create a combine-sink output automatically.</p>
             """
 
-        if getattr(self.driver, "supports_external_virtual_device", False):
+        if capabilities.can_use_external_virtual_device:
             if sys.platform == "darwin":
                 return """
                 <h3>macOS setup</h3>
@@ -162,21 +164,23 @@ class EarbudHubGUI(QMainWindow):
         self.refresh_devices()
 
     def _capability_text(self):
-        if getattr(self.driver, "supports_virtual_hub", False):
+        capabilities = self.driver.get_capabilities()
+        if capabilities.can_create_virtual_hub:
             return "Linux virtual hub mode: multiple Bluetooth sinks can be combined."
-        if getattr(self.driver, "supports_external_virtual_device", False):
+        if capabilities.can_use_external_virtual_device:
             return (
                 "This platform can use an existing aggregate or virtual audio device. "
                 "Create one first, then sync the hub."
             )
-        if getattr(self.driver, "supports_default_device_switch", False):
+        if capabilities.can_switch_default_device:
             return "This platform supports device switching and volume control."
         return "This platform supports device detection only."
 
     def _update_sync_button_label(self):
-        if getattr(self.driver, "supports_virtual_hub", False):
+        capabilities = self.driver.get_capabilities()
+        if capabilities.can_create_virtual_hub:
             self.sync_btn.setText("Force Sync Virtual Hub")
-        elif getattr(self.driver, "supports_default_device_switch", False):
+        elif capabilities.can_switch_default_device:
             self.sync_btn.setText("Set Active Output Device")
         else:
             self.sync_btn.setText("Refresh Devices")
@@ -244,7 +248,7 @@ def launch_gui():
     window = EarbudHubGUI()
     window.show()
 
-    if getattr(window.driver, "supports_external_virtual_device", False) and not window.driver.has_usable_hub_device():
+    if window.driver.get_capabilities().can_use_external_virtual_device and not window.driver.has_usable_hub_device():
         QTimer.singleShot(250, window.open_setup_guide)
 
     sys.exit(app.exec())

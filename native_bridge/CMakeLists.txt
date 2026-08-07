@@ -38,3 +38,22 @@ target_include_directories(multi_earbud_bridge PRIVATE include)
 if (WIN32)
     target_link_libraries(multi_earbud_bridge PRIVATE Ole32 Mmdevapi Uuid Propsys)
 endif()
+
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_executable(multi_earbud_bridge_tests
+    tests/test_types.cpp
+)
+
+target_link_libraries(multi_earbud_bridge_tests PRIVATE gtest_main)
+target_include_directories(multi_earbud_bridge_tests PRIVATE include)
+
+add_test(NAME bridge_types_test COMMAND multi_earbud_bridge_tests)

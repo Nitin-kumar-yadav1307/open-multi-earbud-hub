@@ -104,6 +104,27 @@ cmake --build native_bridge/build -j2
 
 ---
 
+## 🧪 Testing
+
+To run the test suites locally, see [`docs/testing.md`](docs/testing.md).
+
+In short:
+
+```bash
+# Install test dependencies
+python -m pip install -r requirements-dev.txt
+
+# Run Python tests
+python -m pytest tests/ -v
+
+# Build and run C++ tests
+cmake -S native_bridge -B native_bridge/build
+cmake --build native_bridge/build --target multi_earbud_bridge_tests
+cd native_bridge/build && ctest --output-on-failure
+```
+
+---
+
 
 
 ## 📄 License
