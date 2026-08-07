@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <system_error>
 
 #include "bridge/backend_factory.hpp"
 #include "bridge/command.hpp"
@@ -26,12 +27,28 @@ int main(int argc, char* argv[]) {
         printUsage();
         bridge::BridgeReply reply;
         reply.ok = false;
+        reply.error_code = bridge::ErrorCode::InvalidArguments;
+        reply.message = ex.what();
+        std::cout << bridge::json::reply(reply) << std::endl;
+        return 1;
+    } catch (const std::out_of_range& ex) {
+        bridge::BridgeReply reply;
+        reply.ok = false;
+        reply.error_code = bridge::ErrorCode::InvalidArguments;
+        reply.message = ex.what();
+        std::cout << bridge::json::reply(reply) << std::endl;
+        return 1;
+    } catch (const std::system_error& ex) {
+        bridge::BridgeReply reply;
+        reply.ok = false;
+        reply.error_code = bridge::ErrorCode::BackendError;
         reply.message = ex.what();
         std::cout << bridge::json::reply(reply) << std::endl;
         return 1;
     } catch (const std::exception& ex) {
         bridge::BridgeReply reply;
         reply.ok = false;
+        reply.error_code = bridge::ErrorCode::InternalError;
         reply.message = ex.what();
         std::cout << bridge::json::reply(reply) << std::endl;
         return 1;

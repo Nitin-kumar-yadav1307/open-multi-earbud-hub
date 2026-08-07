@@ -61,6 +61,7 @@ inline std::string reply(const BridgeReply& value) {
     std::ostringstream out;
     out << "{";
     out << "\"ok\":" << (value.ok ? "true" : "false");
+    out << ",\"error_code\":" << static_cast<int>(value.error_code);
     out << ",\"message\":\"" << escape(value.message) << "\"";
     out << ",\"available\":" << (value.available ? "true" : "false");
     out << ",\"sinks\":" << sinkList(value.sinks);

@@ -8,6 +8,31 @@ from pathlib import Path
 from .base import BaseAudioDriver
 
 
+class BridgeError(Exception):
+    """Base exception for native bridge failures."""
+
+
+class BridgeInvalidArgumentsError(BridgeError):
+    """Raised when the bridge receives an unknown command or invalid arguments."""
+
+
+class BridgeBackendError(BridgeError):
+    """Raised when the platform backend reports an error (e.g., missing tool, permission denied)."""
+
+
+class BridgeInternalError(BridgeError):
+    """Raised when the bridge encounters an unexpected internal error."""
+
+
+# Maps C++ ErrorCode integer values to Python exception classes.
+# Extend this dict when new error codes are added to native_bridge/include/bridge/types.hpp.
+ERROR_CODE_MAP: dict[int, type[BridgeError]] = {
+    1: BridgeInvalidArgumentsError,
+    2: BridgeBackendError,
+    3: BridgeInternalError,
+}
+
+
 class NativeBridgeAudioDriver(BaseAudioDriver):
     supports_virtual_hub = True
     supports_external_virtual_device = True
@@ -42,7 +67,19 @@ class NativeBridgeAudioDriver(BaseAudioDriver):
             raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "Native bridge failed")
 
         output = result.stdout.strip() or "{}"
-        return json.loads(output)
+        response = json.loads(output)
+
+        ok = response.get("ok", True)
+        error_code = response.get("error_code")
+        message = response.get("message", "")
+
+        if not ok or (error_code is not None and error_code != 0):
+            if error_code is not None and error_code != 0:
+                exc_class = ERROR_CODE_MAP.get(error_code, BridgeInternalError)
+                raise exc_class(f"[{error_code}] {message}")
+            raise BridgeError(message)
+
+        return response
 
     def get_connected_sinks(self) -> list[dict]:
         response = self._run_bridge("list_sinks")
